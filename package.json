@@ -5,7 +5,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "prettier":"prettier 'src/**/*.js'"
   },
   "dependencies": {
     "expo": "~42.0.1",
@@ -17,6 +18,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
+  },
+  "prettier":{
+    "jsxBracketSameLine": true,
+  "semi": false,
+  "singleQuote": true
   },
   "private": true
 }
