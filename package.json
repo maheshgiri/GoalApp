@@ -6,10 +6,12 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "prettier":"prettier 'src/**/*.js'"
+    "prettier": "prettier 'src/**/*.js'"
   },
   "dependencies": {
-    "expo": "~42.0.1",
+    "@react-native-async-storage/async-storage": "~1.15.0",
+    "@react-native-community/slider": "3.0.3",
+    "expo": "^42.0.0",
     "expo-status-bar": "~1.0.4",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -17,12 +19,12 @@
     "react-native-web": "~0.13.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0"
+    "@babel/core": "~7.9.0"
   },
-  "prettier":{
+  "prettier": {
     "jsxBracketSameLine": true,
-  "semi": false,
-  "singleQuote": true
+    "semi": false,
+    "singleQuote": true
   },
   "private": true
 }
