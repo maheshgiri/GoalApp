@@ -1,17 +1,35 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
-import { getMetricMetaInfo, timeToString } from '../utils/helpers'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  ScrollView,
+  StyleSheet,
+} from 'react-native'
+import {
+  getDailyReminderValue,
+  getMetricMetaInfo,
+  timeToString,
+} from '../utils/helpers'
 import Stepper from './Stepper'
 import Slider from './Slider'
 import DateHeader from './DateHeader'
 import { Ionicons } from '@expo/vector-icons'
 import TextButton from './TextButton'
-import { submitEntry, removeEntry } from '../utils/api'
+import { submitEntry } from '../utils/api'
+import { connect } from 'react-redux'
+import { receiveEntries, addEntry } from '../actions'
+import { purple, white } from '../utils/colors'
 
 const SubmitBtn = ({ onPress }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
-      <Text>Submit</Text>
+    <TouchableOpacity
+      onPress={onPress}
+      style={
+        Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn
+      }>
+      <Text style={styles.submitBtnText}>Submit</Text>
     </TouchableOpacity>
   )
 }
@@ -59,6 +77,11 @@ class AddEntry extends Component {
     const entry = this.state
 
     //Update Redux
+    this.props.dispatch(
+      addEntry({
+        [key]: entry,
+      })
+    )
     //Navigate to Home
     //Save to DB
     submitEntry({ entry, key })
@@ -75,7 +98,13 @@ class AddEntry extends Component {
 
   onReset = () => {
     const key = timeToString()
-    removeEntry({ key })
+
+    this.props.dispatch(
+      addEntry({
+        [key]: getDailyReminderValue(),
+      })
+    )
+
     this.setState(() => ({
       run: 0,
       bike: 0,
@@ -90,7 +119,8 @@ class AddEntry extends Component {
 
   render() {
     const metricInfo = getMetricMetaInfo()
-    if (true) {
+    const { alreadyLogged } = this.props
+    if (alreadyLogged) {
       return (
         <View>
           <Ionicons name="ios-happy-outline" size={100} />
@@ -100,7 +130,7 @@ class AddEntry extends Component {
       )
     }
     return (
-      <View>
+      <View style={styles.container}>
         {Object.keys(metricInfo).map((key) => {
           const { getIcon, type, ...rest } = metricInfo[key]
           const value = this.state[key]
@@ -132,4 +162,42 @@ class AddEntry extends Component {
   }
 }
 
-export default AddEntry
+function mapStateToProps(state) {
+  const key = timeToString()
+  console.warn(JSON.stringify(state))
+  return {
+    alreadyLogged: state[key] && typeof state[key].today === 'undefined',
+    entries: state.entries,
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  androidSubmitBtn: {
+    backgroundColor: purple,
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30,
+    borderRadius: 3,
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iosSubmitBtn: {
+    backgroundColor: purple,
+    padding: 10,
+    borderRadius: 7,
+    height: 45,
+    marginLeft: 40,
+    marginRight: 40,
+  },
+  submitBtnText: {
+    color: white,
+    fontSize: 22,
+    textAlign: 'center',
+  },
+})
+
+export default connect(mapStateToProps)(AddEntry)
