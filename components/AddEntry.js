@@ -6,6 +6,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native'
 import {
   getDailyReminderValue,
@@ -122,10 +123,10 @@ class AddEntry extends Component {
     const { alreadyLogged } = this.props
     if (alreadyLogged) {
       return (
-        <View>
-          <Ionicons name="ios-happy-outline" size={100} />
+        <View style={styles.center}>
+          <Ionicons name={Platform.OS==="ios"?"ios-happy-outline":"md-happy"} size={100} />
           <Text>You already Logged your information today</Text>
-          <TextButton onPress={this.onReset}>Reset</TextButton>
+          <TextButton style={{padding:10}} onPress={this.onReset}>Reset</TextButton>
         </View>
       )
     }
@@ -136,7 +137,7 @@ class AddEntry extends Component {
           const value = this.state[key]
 
           return (
-            <View key={key}>
+            <View key={key} style={styles.row}>
               {getIcon()}
               {type === 'slider' ? (
                 <Slider
@@ -174,6 +175,13 @@ function mapStateToProps(state) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 20,
+    backgroundColor: white,
+  },
+  row: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems:'center'
   },
   androidSubmitBtn: {
     backgroundColor: purple,
@@ -197,6 +205,13 @@ const styles = StyleSheet.create({
     color: white,
     fontSize: 22,
     textAlign: 'center',
+  },
+  center:{
+ flex:1,
+ justifyContent:'center',
+ alignItems:'center',
+ marginLeft:30,
+ marginRight:30
   },
 })
 
