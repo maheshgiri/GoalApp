@@ -10,7 +10,7 @@ const store = createStore(reducer)
 export default function App() {
   return (
     <Provider store={store}>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, top: 20 }}>
         <History />
       </View>
     </Provider>
